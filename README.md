@@ -10,4 +10,4 @@ This application was created for educational purposes, to work out a new stack o
 * MVVM
 
 ## License
-HandNotes is [Apache-2.0-licensed](LICENSE.md).
+HandNotes is [Apache-2.0-licensed](LICENSE).
