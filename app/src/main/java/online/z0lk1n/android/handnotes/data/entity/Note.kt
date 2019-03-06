@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-class Note(
+data class Note(
     val id: String,
     val title: String,
     val text: String,
