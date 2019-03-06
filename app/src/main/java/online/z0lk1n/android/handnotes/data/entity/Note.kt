@@ -32,7 +32,7 @@ class Note(
 
     companion object CREATOR : Parcelable.Creator<Note> {
 
-        override fun createFromParcel(parcel: Parcel): Note = Note(parcel)
+        override fun createFromParcel(parcel: Parcel) = Note(parcel)
 
         override fun newArray(size: Int): Array<Note?> = arrayOfNulls(size)
     }
@@ -55,6 +55,7 @@ class Note(
         YELLOW,
         GREEN,
         BLUE,
+        RED,
         VIOLET,
         PINK
     }
