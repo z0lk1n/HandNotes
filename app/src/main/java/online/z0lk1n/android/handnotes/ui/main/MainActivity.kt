@@ -12,7 +12,9 @@ import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = NotesRVAdapter()
+    private val adapter = NotesRVAdapter {
+
+    }
     private val screenConf = ScreenConfiguration(this)
     lateinit var viewModel: MainViewModel
 
@@ -30,8 +32,14 @@ class MainActivity : AppCompatActivity() {
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
 
-        viewModel.viewState().observe(this, Observer<MainViewState> { t ->
-            t?.let { adapter.notes = it.notes }
+        viewModel.viewState().observe(this, Observer<MainViewState> { state ->
+            state?.let {
+                adapter.notes = it.notes
+            }
         })
+
+        fab.setOnClickListener {
+
+        }
     }
 }
