@@ -38,6 +38,7 @@
             android:layout_marginBottom="@dimen/fab_margin"
             app:layout_anchorGravity="bottom|end"
             android:src="@drawable/ic_add_black"
-            app:layout_anchor="@id/rv_notes"/>
+            app:layout_anchor="@id/rv_notes"
+            app:layout_behavior=".util.FABBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>
