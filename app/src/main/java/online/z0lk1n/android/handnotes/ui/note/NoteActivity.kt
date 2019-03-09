@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_note.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
@@ -32,17 +33,6 @@ class NoteActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_NOTE, note)
             context.startActivity(intent)
         }
-    }
-
-    val textChangeWatcher = object : TextWatcher {
-
-        override fun afterTextChanged(s: Editable?) {
-            saveNote()
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,8 +72,21 @@ class NoteActivity : AppCompatActivity() {
             note_toolbar.setBackgroundColor(ContextCompat.getColor(this, background))
         }
 
-        et_title.addTextChangedListener(textChangeWatcher)
-        et_body.addTextChangedListener(textChangeWatcher)
+        et_title.onChange()
+        et_body.onChange()
+    }
+
+    private fun EditText.onChange()  {
+        this.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                saveNote()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     private fun saveNote() {
