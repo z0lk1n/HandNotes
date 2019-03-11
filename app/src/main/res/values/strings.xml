@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">HandNotes</string>
+    <string name="new_note_title">New note</string>
+    <string name="new_note_title_hint">Title</string>
+    <string name="new_note_text_hint">Note text</string>
 </resources>

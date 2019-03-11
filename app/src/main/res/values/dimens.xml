@@ -2,4 +2,7 @@
 <resources>
     <dimen name="cardview_margin">4dp</dimen>
     <dimen name="cardview_text_margin">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="note_linearlayout_padding">16dp</dimen>
+    <dimen name="note_edittext_margin">16dp</dimen>
 </resources>
