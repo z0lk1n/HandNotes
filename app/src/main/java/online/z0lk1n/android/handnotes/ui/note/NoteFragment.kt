@@ -1,45 +1,49 @@
 package online.z0lk1n.android.handnotes.ui.note
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MenuItem
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_note.*
+import kotlinx.android.synthetic.main.fragment_note.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
+import online.z0lk1n.android.handnotes.ui.main.ToolbarTuning
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : AppCompatActivity() {
+class NoteFragment : Fragment() {
 
     private var note: Note? = null
-    lateinit var viewModel: NoteViewModel
+    private lateinit var viewModel: NoteViewModel
 
     companion object {
 
-        private val EXTRA_NOTE = NoteActivity::class.java.name + "extra.NOTE"
+        private val EXTRA_NOTE = NoteFragment::class.java.name + "extra.NOTE"
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
         private const val SAVE_DELAY = 500L
 
-        fun start(context: Context, note: Note? = null) {
-            val intent = Intent(context, NoteActivity::class.java)
-            intent.putExtra(EXTRA_NOTE, note)
-            context.startActivity(intent)
+        fun createBundle(note: Note? = null): Bundle {
+            val noteBundle = Bundle()
+            noteBundle.putParcelable(EXTRA_NOTE, note)
+            return noteBundle
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note)
-        setSupportActionBar(note_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_note, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         init()
         initView()
     }
@@ -47,12 +51,18 @@ class NoteActivity : AppCompatActivity() {
     private fun init() {
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
 
-        note = intent.getParcelableExtra(EXTRA_NOTE)
+        note = arguments?.getParcelable(EXTRA_NOTE)
 
-        supportActionBar?.title = if (note != null) {
-            SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(note!!.lastChanged)
-        } else {
-            getString(R.string.new_note_title)
+        activity?.let {
+            it as ToolbarTuning
+
+            it.setHomeVisibility(true)
+
+            val title = note?.let { n ->
+                SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault()).format(n.lastChanged)
+            } ?: getString(R.string.new_note_title)
+
+            it.setToolbarTitle(title)
         }
     }
 
@@ -69,14 +79,17 @@ class NoteActivity : AppCompatActivity() {
                 Note.Color.VIOLET -> R.color.violet
                 Note.Color.PINK -> R.color.pink
             }
-            note_toolbar.setBackgroundColor(ContextCompat.getColor(this, background))
+            activity?.let { t ->
+                t as ToolbarTuning
+                t.setToolbarColor(background)
+            }
         }
 
         et_title.onChange()
         et_body.onChange()
     }
 
-    private fun EditText.onChange()  {
+    private fun EditText.onChange() {
         this.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable?) {
@@ -107,16 +120,6 @@ class NoteActivity : AppCompatActivity() {
                 viewModel.save(note!!)
             }
 
-        }, SAVE_DELAY)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
+        }, NoteFragment.SAVE_DELAY)
     }
 }
