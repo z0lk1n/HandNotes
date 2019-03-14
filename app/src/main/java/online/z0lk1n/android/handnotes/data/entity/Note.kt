@@ -5,9 +5,9 @@ import android.os.Parcelable
 import java.util.*
 
 data class Note(
-    val id: String,
-    val title: String,
-    val text: String,
+    val id: String = "",
+    val title: String = "",
+    val text: String = "",
     val color: Color = Color.WHITE,
     val lastChanged: Date = Date()
 ) : Parcelable {
