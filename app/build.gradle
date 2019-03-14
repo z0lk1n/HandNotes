@@ -7,6 +7,8 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
+        multiDexEnabled true
+
         applicationId "online.z0lk1n.android.handnotes"
         minSdkVersion 21
         targetSdkVersion 28
@@ -39,8 +41,17 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation 'android.arch.navigation:navigation-fragment:1.0.0-rc02'
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-firestore:18.1.0'
+
     // Tests
     testImplementation "junit:junit:4.12"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+
+    // MultiDex
+    implementation 'com.android.support:multidex:1.0.3'
 }
+
+apply plugin: 'com.google.gms.google-services'
