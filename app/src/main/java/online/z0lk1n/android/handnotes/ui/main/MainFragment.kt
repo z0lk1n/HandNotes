@@ -1,9 +1,7 @@
 package online.z0lk1n.android.handnotes.ui.main
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -13,13 +11,16 @@ import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import online.z0lk1n.android.handnotes.R
-import online.z0lk1n.android.handnotes.ui.note.NoteFragment
+import online.z0lk1n.android.handnotes.data.entity.Note
+import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
 
     lateinit var adapter: NotesRVAdapter
-    lateinit var viewModel: MainViewModel
+    override val viewModel: MainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
 
     private val navController by lazy {
         NavHostFragment.findNavController(this)
@@ -38,9 +39,10 @@ class MainFragment : Fragment() {
     }
 
     private fun init() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         adapter = NotesRVAdapter {
-            navController.navigate(R.id.toNoteFragment, NoteFragment.createBundle(it))
+            val noteBundle = Bundle()
+            noteBundle.putString(getString(R.string.note_id), it.id)
+            navController.navigate(R.id.toNoteFragment, noteBundle)
         }
 
         rv_notes.layoutManager = GridLayoutManager(
@@ -50,12 +52,6 @@ class MainFragment : Fragment() {
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
 
-        viewModel.viewState().observe(this, Observer<MainViewState> { state ->
-            state?.let {
-                adapter.notes = it.notes
-            }
-        })
-
         activity?.let {
             it as ToolbarTuning
 
@@ -63,6 +59,10 @@ class MainFragment : Fragment() {
             it.setToolbarTitle(getString(R.string.app_name))
             it.setToolbarColor(R.color.colorPrimary)
         }
+    }
+
+    override fun renderData(data: List<Note>?) {
+        data?.let { adapter.notes = it }
     }
 
     override fun onResume() {
