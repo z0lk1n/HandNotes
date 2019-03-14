@@ -20,5 +20,11 @@
             android:id="@+id/noteFragment"
             android:name="online.z0lk1n.android.handnotes.ui.note.NoteFragment"
             android:label="fragment_note"
-            tools:layout="@layout/fragment_note"/>
+            tools:layout="@layout/fragment_note">
+        <argument
+                android:name="@string/note_id"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="-1"/>
+    </fragment>
 </navigation>

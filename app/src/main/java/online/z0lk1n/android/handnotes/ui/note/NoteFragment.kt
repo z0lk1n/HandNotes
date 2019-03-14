@@ -2,8 +2,6 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.Handler
-import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,26 +11,21 @@ import android.widget.EditText
 import kotlinx.android.synthetic.main.fragment_note.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
+import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.ui.main.ToolbarTuning
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteFragment : Fragment() {
+class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
     private var note: Note? = null
-    private lateinit var viewModel: NoteViewModel
+    override val viewModel: NoteViewModel by lazy {
+        ViewModelProviders.of(this).get(NoteViewModel::class.java)
+    }
 
     companion object {
-
-        private val EXTRA_NOTE = NoteFragment::class.java.name + "extra.NOTE"
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
         private const val SAVE_DELAY = 500L
-
-        fun createBundle(note: Note? = null): Bundle {
-            val noteBundle = Bundle()
-            noteBundle.putParcelable(EXTRA_NOTE, note)
-            return noteBundle
-        }
     }
 
     override fun onCreateView(
@@ -49,14 +42,27 @@ class NoteFragment : Fragment() {
     }
 
     private fun init() {
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
-
-        note = arguments?.getParcelable(EXTRA_NOTE)
+        val noteId = arguments?.getString(getString(R.string.note_id))
 
         activity?.let {
             it as ToolbarTuning
 
             it.setHomeVisibility(true)
+
+            noteId?.let { id ->
+                viewModel.loadNote(id)
+            } ?: it.setToolbarTitle(getString(R.string.new_note_title))
+        }
+
+        et_title.onChange()
+        et_body.onChange()
+    }
+
+    override fun renderData(data: Note?) {
+        note = data
+
+        activity?.let {
+            it as ToolbarTuning
 
             val title = note?.let { n ->
                 SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault()).format(n.lastChanged)
@@ -64,6 +70,8 @@ class NoteFragment : Fragment() {
 
             it.setToolbarTitle(title)
         }
+
+        initView()
     }
 
     private fun initView() {
@@ -84,15 +92,21 @@ class NoteFragment : Fragment() {
                 t.setToolbarColor(background)
             }
         }
-
-        et_title.onChange()
-        et_body.onChange()
     }
 
     private fun EditText.onChange() {
         this.addTextChangedListener(object : TextWatcher {
+            private var timer = Timer()
 
             override fun afterTextChanged(s: Editable?) {
+                timer.cancel()
+                timer = Timer()
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        saveNote()
+                    }
+                }, SAVE_DELAY)
+
                 saveNote()
             }
 
@@ -105,21 +119,16 @@ class NoteFragment : Fragment() {
     private fun saveNote() {
         if (et_title.text.isNullOrBlank() || et_title.text!!.length < 3) return
 
-        Handler().postDelayed({
-            note = note?.copy(
-                title = et_title.text.toString(),
-                text = et_body.text.toString(),
-                lastChanged = Date()
-            ) ?: Note(
-                UUID.randomUUID().toString(),
-                et_title.text.toString(),
-                et_body.text.toString()
-            )
+        note = note?.copy(
+            title = et_title.text.toString(),
+            text = et_body.text.toString(),
+            lastChanged = Date()
+        ) ?: Note(
+            UUID.randomUUID().toString(),
+            et_title.text.toString(),
+            et_body.text.toString()
+        )
 
-            note?.let {
-                viewModel.save(note!!)
-            }
-
-        }, NoteFragment.SAVE_DELAY)
+        note?.let { viewModel.save(note!!) }
     }
 }
