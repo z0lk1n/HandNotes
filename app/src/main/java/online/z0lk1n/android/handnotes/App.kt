@@ -1,8 +1,8 @@
 package online.z0lk1n.android.handnotes
 
-import android.support.multidex.MultiDexApplication
+import android.app.Application
 
-class App : MultiDexApplication() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
     }
