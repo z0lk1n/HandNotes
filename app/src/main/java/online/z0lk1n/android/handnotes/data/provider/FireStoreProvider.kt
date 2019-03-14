@@ -2,6 +2,7 @@ package online.z0lk1n.android.handnotes.data.provider
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import online.z0lk1n.android.handnotes.data.entity.Note
@@ -17,6 +18,8 @@ class FireStoreProvider : RemoteDataProvider {
         FirebaseFirestore.getInstance().collection(NOTES_COLLECTION)
     }
 
+    private val TAG = "${FireStoreProvider::class.java.simpleName}!"
+
     override fun getNoteById(id: String): LiveData<NoteResult> {
         val result = MutableLiveData<NoteResult>()
 
@@ -25,6 +28,7 @@ class FireStoreProvider : RemoteDataProvider {
             .addOnSuccessListener {
                 result.value = NoteResult.Success(it.toObject(Note::class.java))
             }.addOnFailureListener {
+                Log.e(TAG, "Error reading note with id: $id")
                 result.value = NoteResult.Error(it)
             }
 
@@ -37,8 +41,10 @@ class FireStoreProvider : RemoteDataProvider {
         notesReference.document(note.id)
             .set(note)
             .addOnSuccessListener {
+                Log.d(TAG, "Note $note is saved")
                 result.value = NoteResult.Success(note)
             }.addOnFailureListener {
+                Log.e(TAG, "Error saving note $note, message: ${it.message}")
                 result.value = NoteResult.Error(it)
             }
 
