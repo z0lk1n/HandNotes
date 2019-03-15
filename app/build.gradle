@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-firestore:18.1.0'
 
+    // Timberkt
+    implementation 'com.github.ajalt:timberkt:1.5.1'
+
     // Tests
     testImplementation "junit:junit:4.12"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
