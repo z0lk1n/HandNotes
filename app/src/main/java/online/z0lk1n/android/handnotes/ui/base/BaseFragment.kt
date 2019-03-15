@@ -3,9 +3,9 @@ package online.z0lk1n.android.handnotes.ui.base
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.github.ajalt.timberkt.Timber
 
 abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
 
@@ -25,7 +25,7 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
 
     protected fun renderError(error: Throwable?) {
         error?.let { e ->
-            Log.e(TAG, "${e.message}")
+            Timber.e(e) { "${e.message}" }
             e.message?.let {
                 showError(it)
             }
