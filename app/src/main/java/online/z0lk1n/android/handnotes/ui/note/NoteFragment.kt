@@ -2,14 +2,13 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import kotlinx.android.synthetic.main.fragment_note.*
 import online.z0lk1n.android.handnotes.R
+import online.z0lk1n.android.handnotes.common.getColorResId
+import online.z0lk1n.android.handnotes.common.onChange
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.ui.main.ToolbarTuning
@@ -54,8 +53,8 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
             } ?: it.setToolbarTitle(getString(R.string.new_note_title))
         }
 
-        et_title.onChange()
-        et_body.onChange()
+        et_title.onChange(SAVE_DELAY) { saveNote() }
+        et_body.onChange(SAVE_DELAY) { saveNote() }
     }
 
     override fun renderData(data: Note?) {
@@ -78,42 +77,12 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
         note?.let {
             et_title.setText(it.title)
             et_body.setText(it.text)
-            val background = when (it.color) {
-                Note.Color.WHITE -> R.color.white
-                Note.Color.YELLOW -> R.color.yellow
-                Note.Color.GREEN -> R.color.green
-                Note.Color.BLUE -> R.color.blue
-                Note.Color.RED -> R.color.red
-                Note.Color.VIOLET -> R.color.violet
-                Note.Color.PINK -> R.color.pink
-            }
+
             activity?.let { t ->
                 t as ToolbarTuning
-                t.setToolbarColor(background)
+                t.setToolbarColor(it.color.getColorResId(t))
             }
         }
-    }
-
-    private fun EditText.onChange() {
-        this.addTextChangedListener(object : TextWatcher {
-            private var timer = Timer()
-
-            override fun afterTextChanged(s: Editable?) {
-                timer.cancel()
-                timer = Timer()
-                timer.schedule(object : TimerTask() {
-                    override fun run() {
-                        saveNote()
-                    }
-                }, SAVE_DELAY)
-
-                saveNote()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
     }
 
     private fun saveNote() {
