@@ -9,10 +9,13 @@
     <fragment
             android:id="@+id/splashFragment"
             android:name="online.z0lk1n.android.handnotes.ui.splash.SplashFragment"
-            android:label="SplashFragment">
+            android:label="SplashFragment"
+            tools:layout="@layout/fragment_splash">
         <action
                 android:id="@+id/toMainFragment"
-                app:destination="@id/mainFragment"/>
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/splashFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
