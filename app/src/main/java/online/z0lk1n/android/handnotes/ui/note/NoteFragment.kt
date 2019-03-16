@@ -17,14 +17,14 @@ import java.util.*
 
 class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
-    private var note: Note? = null
-    override val viewModel: NoteViewModel by lazy {
-        ViewModelProviders.of(this).get(NoteViewModel::class.java)
-    }
-
     companion object {
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
         private const val SAVE_DELAY = 500L
+    }
+
+    private var note: Note? = null
+    override val viewModel: NoteViewModel by lazy {
+        ViewModelProviders.of(this).get(NoteViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -59,34 +59,30 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
     override fun renderData(data: Note?) {
         note = data
-
-        activity?.let {
-            it as ToolbarTuning
-
-            val title = note?.let { n ->
-                SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault()).format(n.lastChanged)
-            } ?: getString(R.string.new_note_title)
-
-            it.setToolbarTitle(title)
-        }
-
         initView()
     }
 
     private fun initView() {
-        note?.let {
-            et_title.setText(it.title)
-            et_body.setText(it.text)
+        note?.run {
+            activity?.let {
+                it as ToolbarTuning
 
-            activity?.let { t ->
-                t as ToolbarTuning
-                t.setToolbarColor(it.color.getColorResId(t))
+                val title = note?.let { n ->
+                    SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault())
+                        .format(n.lastChanged)
+                } ?: getString(R.string.new_note_title)
+
+                it.setToolbarTitle(title)
+                it.setToolbarColor(color.getColorResId(it))
             }
+
+            et_title.setText(title)
+            et_body.setText(text)
         }
     }
 
     private fun saveNote() {
-        if (et_title.text.isNullOrBlank() || et_title.text!!.length < 3) return
+        if (et_title.text.isNullOrBlank() || et_title.text!!.length < 2) return
 
         note = note?.copy(
             title = et_title.text.toString(),
