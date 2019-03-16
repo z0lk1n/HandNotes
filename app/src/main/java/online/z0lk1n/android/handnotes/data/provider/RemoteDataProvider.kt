@@ -2,6 +2,7 @@ package online.z0lk1n.android.handnotes.data.provider
 
 import android.arch.lifecycle.LiveData
 import online.z0lk1n.android.handnotes.data.entity.Note
+import online.z0lk1n.android.handnotes.data.entity.User
 import online.z0lk1n.android.handnotes.model.NoteResult
 
 interface RemoteDataProvider {
@@ -11,4 +12,6 @@ interface RemoteDataProvider {
     fun saveNote(note: Note): LiveData<NoteResult>
 
     fun subscribeToAllNotes(): LiveData<NoteResult>
+
+    fun getCurrentUser(): LiveData<User?>
 }
