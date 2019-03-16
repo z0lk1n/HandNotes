@@ -26,6 +26,6 @@ class SplashFragment : BaseFragment<Boolean?, SplashViewState>() {
     }
 
     private fun startMainFragment() {
-//        MainActivity.start(this)
+//todo        MainActivity.start(this)
     }
 }

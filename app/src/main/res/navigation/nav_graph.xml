@@ -4,7 +4,16 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_graph"
-        app:startDestination="@id/mainFragment">
+        app:startDestination="@id/splashFragment">
+
+    <fragment
+            android:id="@+id/splashFragment"
+            android:name="online.z0lk1n.android.handnotes.ui.splash.SplashFragment"
+            android:label="SplashFragment">
+        <action
+                android:id="@+id/toMainFragment"
+                app:destination="@id/mainFragment"/>
+    </fragment>
 
     <fragment
             android:id="@+id/mainFragment"
@@ -14,6 +23,9 @@
         <action
                 android:id="@+id/toNoteFragment"
                 app:destination="@id/noteFragment"/>
+        <action
+                android:id="@+id/toSplashFragment"
+                app:destination="@id/splashFragment"/>
     </fragment>
 
     <fragment
@@ -27,4 +39,5 @@
                 app:nullable="true"
                 android:defaultValue="-1"/>
     </fragment>
+
 </navigation>

@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
+import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import online.z0lk1n.android.handnotes.R
@@ -15,7 +17,8 @@ import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 
-class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
+class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
+    LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
     override val viewModel: MainViewModel by lazy {
@@ -62,7 +65,9 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
     }
 
     override fun renderData(data: List<Note>?) {
-        data?.let { adapter.notes = it }
+        data?.let {
+            adapter.notes = it
+        }
     }
 
     override fun onResume() {
@@ -84,4 +89,29 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
             it.fab.hide()
         }
     }
+
+    override fun onLogout() {
+        AuthUI.getInstance()
+            .signOut(context!!)
+            .addOnCompleteListener {
+                navController.navigate(R.id.toSplashFragment)
+// todo               finish()
+            }
+    }
+
+    private fun showLogoutDialog() {
+        fragmentManager?.let {
+            it.findFragmentByTag(LogoutDialog.TAG)
+                ?: LogoutDialog.createInstance().show(it, LogoutDialog.TAG)
+        }
+    }
+
+//todo    override fun onCreateOptionsMenu(menu: Menu?): Boolean =
+//        MenuInflater(context).inflate(R.menu.main, menu).let { true }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.logout -> showLogoutDialog().let { true }
+            else -> false
+        }
 }
