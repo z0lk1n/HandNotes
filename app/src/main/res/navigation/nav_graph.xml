@@ -14,7 +14,7 @@
         <action
                 android:id="@+id/toMainFragment"
                 app:destination="@id/mainFragment"
-                app:popUpTo="@id/splashFragment"
+                app:popUpTo="@id/nav_graph"
                 app:popUpToInclusive="true"/>
     </fragment>
 
@@ -28,7 +28,9 @@
                 app:destination="@id/noteFragment"/>
         <action
                 android:id="@+id/toSplashFragment"
-                app:destination="@id/splashFragment"/>
+                app:destination="@id/splashFragment"
+                app:popUpTo="@id/nav_graph"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -39,8 +41,7 @@
         <argument
                 android:name="@string/note_id"
                 app:argType="string"
-                app:nullable="true"
-                android:defaultValue="-1"/>
+                app:nullable="true"/>
     </fragment>
 
 </navigation>

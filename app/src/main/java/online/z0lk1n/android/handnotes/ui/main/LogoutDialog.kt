@@ -4,9 +4,14 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import online.z0lk1n.android.handnotes.R
 
 class LogoutDialog : DialogFragment() {
+
+    interface LogoutListener {
+        fun onLogout()
+    }
 
     companion object {
         val TAG = LogoutDialog::class.java.name + "TAG"
@@ -18,14 +23,8 @@ class LogoutDialog : DialogFragment() {
             .setTitle(R.string.logout_dialog_title)
             .setMessage(R.string.logout_dialog_message)
             .setPositiveButton(R.string.btn_ok) { _, _ ->
-                (activity as LogoutListener).onLogout()
+                (nav_host_fragment as LogoutListener).onLogout()
             }
-            .setNegativeButton(R.string.btn_cancel) { _, _ ->
-                dismiss()
-            }
+            .setNegativeButton(R.string.btn_cancel) { _, _ -> dismiss() }
             .create()
-
-    interface LogoutListener {
-        fun onLogout()
-    }
 }

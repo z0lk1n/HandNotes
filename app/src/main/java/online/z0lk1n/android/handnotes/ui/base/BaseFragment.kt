@@ -45,7 +45,8 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
 
     private fun startLoginActivity() {
         val providers = listOf(
-            AuthUI.IdpConfig.GoogleBuilder().build()
+            AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.AnonymousBuilder().build()
         )
 
         startActivityForResult(

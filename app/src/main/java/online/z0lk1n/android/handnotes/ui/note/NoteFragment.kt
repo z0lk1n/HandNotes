@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_note.*
+import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
 import online.z0lk1n.android.handnotes.common.onChange
+import online.z0lk1n.android.handnotes.common.toStringFormat
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
-import online.z0lk1n.android.handnotes.ui.main.ToolbarTuning
-import java.text.SimpleDateFormat
+import online.z0lk1n.android.handnotes.ui.main.MainActivity
 import java.util.*
 
 class NoteFragment : BaseFragment<Note?, NoteViewState>() {
@@ -37,20 +38,22 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-        initView()
     }
 
     private fun init() {
         val noteId = arguments?.getString(getString(R.string.note_id))
 
         activity?.let {
-            it as ToolbarTuning
+            it as MainActivity
 
-            it.setHomeVisibility(true)
+            it.setSupportActionBar(toolbar)
+            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-            noteId?.let { id ->
-                viewModel.loadNote(id)
-            } ?: it.setToolbarTitle(getString(R.string.new_note_title))
+            if (noteId == null) {
+                it.supportActionBar?.title = getString(R.string.new_note_title)
+            } else {
+                viewModel.loadNote(noteId)
+            }
         }
 
         et_title.onChange(SAVE_DELAY) { saveNote() }
@@ -64,16 +67,9 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
     private fun initView() {
         note?.run {
-            activity?.let {
-                it as ToolbarTuning
-
-                val title = note?.let { n ->
-                    SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault())
-                        .format(n.lastChanged)
-                } ?: getString(R.string.new_note_title)
-
-                it.setToolbarTitle(title)
-                it.setToolbarColor(color.getColorResId(it))
+            (activity as MainActivity).run {
+                supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
+                toolbar.setBackgroundColor(color.getColorResId(this))
             }
 
             et_title.setText(title)
@@ -82,7 +78,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
     }
 
     private fun saveNote() {
-        if (et_title.text.isNullOrBlank() || et_title.text!!.length < 2) return
+        if (et_title.text.isNullOrBlank() || et_title.text!!.length < 3) return
 
         note = note?.copy(
             title = et_title.text.toString(),
