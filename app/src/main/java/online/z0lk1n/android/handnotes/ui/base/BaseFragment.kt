@@ -4,11 +4,13 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.github.ajalt.timberkt.Timber
+import kotlinx.android.synthetic.main.fragment_splash.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 
@@ -19,6 +21,7 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
     }
 
     abstract val viewModel: BaseViewModel<T, S>
+    private var tryConnect: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,33 +47,47 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
     }
 
     private fun startLoginActivity() {
-        val providers = listOf(
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.AnonymousBuilder().build()
-        )
+        if (tryConnect) {
+            tryConnect = false
 
-        startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setLogo(R.drawable.android_robot)
-                .setTheme(R.style.AppTheme_Login)
-                .setAvailableProviders(providers)
-                .build(),
-            RC_SIGN_IN
-        )
+            val providers = listOf(
+                AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.AnonymousBuilder().build()
+            )
+
+            startActivityForResult(
+                AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setLogo(R.drawable.android_robot)
+                    .setTheme(R.style.AppTheme_Login)
+                    .setAvailableProviders(providers)
+                    .build(),
+                RC_SIGN_IN
+            )
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN && resultCode != Activity.RESULT_OK) {
-//todo            finish()
+            showReconnectMsg()
         }
+    }
+
+    private fun showReconnectMsg() {
+        Snackbar.make(fl_splash_screen, R.string.operation_canceled, Snackbar.LENGTH_INDEFINITE)
+            .apply {
+                setAction(R.string.btn_retry) {
+                    tryConnect = true
+                    startLoginActivity()
+                }
+                show()
+            }
     }
 
     abstract fun renderData(data: T)
 
     protected fun showError(error: String) {
-        //TODO change to snackbar
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
     }
 }
