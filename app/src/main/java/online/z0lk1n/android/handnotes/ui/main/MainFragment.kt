@@ -95,8 +95,8 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
         inflater?.inflate(R.menu.main, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+        when (item?.itemId) {
             R.id.logout -> showLogoutDialog().let { true }
             else -> false
         }

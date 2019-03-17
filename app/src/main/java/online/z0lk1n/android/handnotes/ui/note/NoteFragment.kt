@@ -1,10 +1,12 @@
 package online.z0lk1n.android.handnotes.ui.note
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
@@ -15,6 +17,7 @@ import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.ui.main.MainActivity
 import java.util.*
+
 
 class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
@@ -91,5 +94,20 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
         )
 
         note?.let { viewModel.save(note!!) }
+    }
+
+    override fun onPause() {
+        hideKeyboard()
+        super.onPause()
+    }
+
+    private fun hideKeyboard() {
+        activity?.run {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(
+                    currentFocus?.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+        }
     }
 }
