@@ -75,11 +75,13 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     }
 
     override fun onLogout() {
-        AuthUI.getInstance()
-            .signOut(context!!)
-            .addOnCompleteListener {
-                navController.navigate(R.id.toSplashFragment)
-            }
+        activity?.run {
+            AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener {
+                    navController.navigate(R.id.toSplashFragment)
+                }
+        }
     }
 
     private fun showLogoutDialog() {
