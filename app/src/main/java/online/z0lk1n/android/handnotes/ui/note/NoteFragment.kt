@@ -1,31 +1,34 @@
 package online.z0lk1n.android.handnotes.ui.note
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.fragment_note.*
+import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
+import online.z0lk1n.android.handnotes.common.getColorResId
+import online.z0lk1n.android.handnotes.common.onChange
+import online.z0lk1n.android.handnotes.common.toStringFormat
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
-import online.z0lk1n.android.handnotes.ui.main.ToolbarTuning
-import java.text.SimpleDateFormat
+import online.z0lk1n.android.handnotes.ui.main.MainActivity
 import java.util.*
 
-class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
-    private var note: Note? = null
-    override val viewModel: NoteViewModel by lazy {
-        ViewModelProviders.of(this).get(NoteViewModel::class.java)
-    }
+class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
     companion object {
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
         private const val SAVE_DELAY = 500L
+    }
+
+    private var note: Note? = null
+    override val viewModel: NoteViewModel by lazy {
+        ViewModelProviders.of(this).get(NoteViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -38,82 +41,43 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-        initView()
     }
 
     private fun init() {
         val noteId = arguments?.getString(getString(R.string.note_id))
 
         activity?.let {
-            it as ToolbarTuning
+            it as MainActivity
 
-            it.setHomeVisibility(true)
+            it.setSupportActionBar(toolbar)
+            it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-            noteId?.let { id ->
-                viewModel.loadNote(id)
-            } ?: it.setToolbarTitle(getString(R.string.new_note_title))
+            if (noteId == null) {
+                it.supportActionBar?.title = getString(R.string.new_note_title)
+            } else {
+                viewModel.loadNote(noteId)
+            }
         }
 
-        et_title.onChange()
-        et_body.onChange()
+        et_title.onChange(SAVE_DELAY) { saveNote() }
+        et_body.onChange(SAVE_DELAY) { saveNote() }
     }
 
     override fun renderData(data: Note?) {
         note = data
-
-        activity?.let {
-            it as ToolbarTuning
-
-            val title = note?.let { n ->
-                SimpleDateFormat(NoteFragment.DATE_FORMAT, Locale.getDefault()).format(n.lastChanged)
-            } ?: getString(R.string.new_note_title)
-
-            it.setToolbarTitle(title)
-        }
-
         initView()
     }
 
     private fun initView() {
-        note?.let {
-            et_title.setText(it.title)
-            et_body.setText(it.text)
-            val background = when (it.color) {
-                Note.Color.WHITE -> R.color.white
-                Note.Color.YELLOW -> R.color.yellow
-                Note.Color.GREEN -> R.color.green
-                Note.Color.BLUE -> R.color.blue
-                Note.Color.RED -> R.color.red
-                Note.Color.VIOLET -> R.color.violet
-                Note.Color.PINK -> R.color.pink
+        note?.run {
+            (activity as MainActivity).run {
+                supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
+                toolbar.setBackgroundColor(color.getColorResId(this))
             }
-            activity?.let { t ->
-                t as ToolbarTuning
-                t.setToolbarColor(background)
-            }
+
+            et_title.setText(title)
+            et_body.setText(text)
         }
-    }
-
-    private fun EditText.onChange() {
-        this.addTextChangedListener(object : TextWatcher {
-            private var timer = Timer()
-
-            override fun afterTextChanged(s: Editable?) {
-                timer.cancel()
-                timer = Timer()
-                timer.schedule(object : TimerTask() {
-                    override fun run() {
-                        saveNote()
-                    }
-                }, SAVE_DELAY)
-
-                saveNote()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
     }
 
     private fun saveNote() {
@@ -130,5 +94,20 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
         )
 
         note?.let { viewModel.save(note!!) }
+    }
+
+    override fun onPause() {
+        hideKeyboard()
+        super.onPause()
+    }
+
+    private fun hideKeyboard() {
+        activity?.run {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(
+                    currentFocus?.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+        }
     }
 }

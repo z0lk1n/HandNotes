@@ -4,18 +4,18 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.navigation.fragment.NavHostFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 
-class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
+class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
+    LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
     override val viewModel: MainViewModel by lazy {
@@ -39,6 +39,9 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
     }
 
     private fun init() {
+        setHasOptionsMenu(true)
+        (activity as MainActivity).setSupportActionBar(toolbar)
+
         adapter = NotesRVAdapter {
             val noteBundle = Bundle()
             noteBundle.putString(getString(R.string.note_id), it.id)
@@ -51,37 +54,50 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>() {
         )
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
-
-        activity?.let {
-            it as ToolbarTuning
-
-            it.setHomeVisibility(false)
-            it.setToolbarTitle(getString(R.string.app_name))
-            it.setToolbarColor(R.color.colorPrimary)
-        }
     }
 
     override fun renderData(data: List<Note>?) {
-        data?.let { adapter.notes = it }
+        data?.let {
+            adapter.notes = it
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
-        activity?.let {
-            it.fab.show()
-            it.fab.setOnClickListener {
-                navController.navigate(R.id.toNoteFragment)
-            }
+        fab.setOnClickListener {
+            navController.navigate(R.id.toNoteFragment)
         }
     }
 
     override fun onPause() {
         super.onPause()
+        fab.setOnClickListener(null)
+    }
 
-        activity?.let {
-            it.fab.setOnClickListener(null)
-            it.fab.hide()
+    override fun onLogout() {
+        activity?.run {
+            AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener {
+                    navController.navigate(R.id.toSplashFragment)
+                }
         }
     }
+
+    private fun showLogoutDialog() {
+        fragmentManager?.let {
+            it.findFragmentByTag(LogoutDialog.TAG)
+                ?: LogoutDialog.createInstance().show(it, LogoutDialog.TAG)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+        when (item?.itemId) {
+            R.id.logout -> showLogoutDialog().let { true }
+            else -> false
+        }
 }

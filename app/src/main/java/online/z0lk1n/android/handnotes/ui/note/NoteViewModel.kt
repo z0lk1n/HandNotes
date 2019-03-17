@@ -5,7 +5,8 @@ import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.model.NoteResult
 import online.z0lk1n.android.handnotes.ui.base.BaseViewModel
 
-class NoteViewModel(private val repository: NotesRepository = NotesRepository) : BaseViewModel<Note?, NoteViewState>() {
+class NoteViewModel(private val repository: NotesRepository = NotesRepository) :
+    BaseViewModel<Note?, NoteViewState>() {
 
     private var pendingNote: Note? = null
 

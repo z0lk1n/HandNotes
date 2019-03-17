@@ -4,4 +4,13 @@
     <string name="new_note_title_hint">Title</string>
     <string name="new_note_text_hint">Note text</string>
     <string name="note_id">noteId</string>
+    <string name="logout_menu_title">Logout</string>
+    <string name="logout_dialog_title">Sign out?</string>
+    <string name="logout_dialog_message">
+        All your notes will be saved. You can access them after authorization.
+    </string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_retry">Retry</string>
+    <string name="operation_canceled">Oops, we had a problem connection.</string>
 </resources>
