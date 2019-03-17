@@ -25,7 +25,11 @@
             tools:layout="@layout/fragment_main">
         <action
                 android:id="@+id/toNoteFragment"
-                app:destination="@id/noteFragment"/>
+                app:destination="@id/noteFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/toSplashFragment"
                 app:destination="@id/splashFragment"

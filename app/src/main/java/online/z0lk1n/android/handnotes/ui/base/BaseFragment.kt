@@ -53,7 +53,7 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setLogo(R.drawable.android_robot)
-                .setTheme(R.style.LoginStyle)
+                .setTheme(R.style.AppTheme_Login)
                 .setAvailableProviders(providers)
                 .build(),
             RC_SIGN_IN

@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         tools:context=".ui.note.NoteFragment">
 
-    <include layout="@layout/toolbar"/>
+    <include
+            layout="@layout/toolbar"
+            android:id="@+id/note_include_toolbar"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
+    <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/note_linearlayout_padding">
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/note_padding"
+            android:paddingTop="@dimen/note_padding"
+            android:paddingStart="@dimen/note_padding"
+            app:layout_constraintTop_toBottomOf="@id/note_include_toolbar"
+            android:hint="@string/new_note_title_hint"
+            android:textColorHint="@color/black">
 
-        <android.support.design.widget.TextInputLayout
+        <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/new_note_title_hint"
-                android:textColorHint="@color/black">
+                android:textColor="@color/black"/>
+    </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                    android:id="@+id/et_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"/>
-        </android.support.design.widget.TextInputLayout>
+    <EditText
+            android:id="@+id/et_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/note_padding"
+            android:paddingBottom="@dimen/note_padding"
+            android:paddingStart="@dimen/note_padding"
+            app:layout_constraintTop_toBottomOf="@id/til_title"
+            android:layout_marginTop="@dimen/note_edittext_margin"
+            android:background="@null"
+            android:hint="@string/new_note_text_hint"
+            tools:ignore="Autofill"
+            android:inputType="text"/>
 
-        <EditText
-                android:id="@+id/et_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/note_edittext_margin"
-                android:background="@null"
-                android:hint="@string/new_note_text_hint"
-                tools:ignore="Autofill"
-                android:inputType="text"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="LoginStyle" parent="AppTheme"/>
+    <style name="AppTheme.Login"/>
+
+    <style name="AppTheme.Launch">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 
 </resources>
