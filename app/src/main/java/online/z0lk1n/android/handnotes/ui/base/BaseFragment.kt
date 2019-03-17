@@ -88,6 +88,6 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
     abstract fun renderData(data: T)
 
     protected fun showError(error: String) {
-        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
     }
 }
