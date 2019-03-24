@@ -1,6 +1,5 @@
 package online.z0lk1n.android.handnotes.ui.main
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -13,14 +12,13 @@ import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
-    override val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    override val model: MainViewModel by viewModel()
 
     private val navController by lazy {
         NavHostFragment.findNavController(this)

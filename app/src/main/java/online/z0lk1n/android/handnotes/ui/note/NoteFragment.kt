@@ -1,6 +1,5 @@
 package online.z0lk1n.android.handnotes.ui.note
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +15,7 @@ import online.z0lk1n.android.handnotes.common.toStringFormat
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.ui.main.MainActivity
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
@@ -27,9 +27,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
     }
 
     private var note: Note? = null
-    override val viewModel: NoteViewModel by lazy {
-        ViewModelProviders.of(this).get(NoteViewModel::class.java)
-    }
+    override val model: NoteViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +53,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
             if (noteId == null) {
                 it.supportActionBar?.title = getString(R.string.new_note_title)
             } else {
-                viewModel.loadNote(noteId)
+                model.loadNote(noteId)
             }
         }
 
@@ -93,7 +91,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
             et_body.text.toString()
         )
 
-        note?.let { viewModel.save(note!!) }
+        note?.let { model.save(note!!) }
     }
 
     override fun onPause() {

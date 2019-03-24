@@ -6,7 +6,7 @@ import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.model.NoteResult
 import online.z0lk1n.android.handnotes.ui.base.BaseViewModel
 
-class MainViewModel(private val repository: NotesRepository = NotesRepository) :
+class MainViewModel(private val repository: NotesRepository) :
     BaseViewModel<List<Note>?, MainViewState>() {
 
     private val notesObserver = Observer<NoteResult> {

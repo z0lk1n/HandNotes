@@ -10,19 +10,16 @@ import online.z0lk1n.android.handnotes.data.entity.User
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 import online.z0lk1n.android.handnotes.model.NoteResult
 
-class FireStoreProvider : RemoteDataProvider {
+class FireStoreProvider(private val firebaseAuth: FirebaseAuth,
+                        private val store: FirebaseFirestore) : RemoteDataProvider {
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
         private const val USERS_COLLECTION = "users"
     }
 
-    private val store by lazy {
-        FirebaseFirestore.getInstance()
-    }
-
     private val currentUser
-        get() = FirebaseAuth.getInstance().currentUser
+        get() = firebaseAuth.currentUser
 
     override fun getCurrentUser(): LiveData<User?> =
         MutableLiveData<User?>().apply {

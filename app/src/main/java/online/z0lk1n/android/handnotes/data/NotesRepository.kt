@@ -1,12 +1,9 @@
 package online.z0lk1n.android.handnotes.data
 
 import online.z0lk1n.android.handnotes.data.entity.Note
-import online.z0lk1n.android.handnotes.data.provider.FireStoreProvider
 import online.z0lk1n.android.handnotes.data.provider.RemoteDataProvider
 
-object NotesRepository {
-
-    private val remoteDataProvider: RemoteDataProvider = FireStoreProvider()
+class NotesRepository(private val remoteDataProvider: RemoteDataProvider) {
 
     fun getNoteById(id: String) = remoteDataProvider.getNoteById(id)
 
