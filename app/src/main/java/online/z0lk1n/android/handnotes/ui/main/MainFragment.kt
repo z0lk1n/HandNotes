@@ -96,6 +96,6 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean =
         when (item?.itemId) {
             R.id.logout -> showLogoutDialog().let { true }
-            else -> false
+            else -> super.onOptionsItemSelected(item)
         }
 }

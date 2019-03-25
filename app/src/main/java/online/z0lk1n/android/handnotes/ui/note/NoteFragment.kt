@@ -2,9 +2,7 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -42,6 +40,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
     }
 
     private fun init() {
+        setHasOptionsMenu(true)
         val noteId = arguments?.getString(getString(R.string.note_id))
 
         activity?.let {
@@ -107,5 +106,24 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
                     InputMethodManager.HIDE_NOT_ALWAYS
                 )
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.note, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+        when (item?.itemId) {
+            R.id.palette -> togglePalette().let { true }
+            R.id.delete -> deleteNote().let { true }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    private fun togglePalette() {
+
+    }
+
+    private fun deleteNote() {
+
     }
 }
