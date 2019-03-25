@@ -41,7 +41,9 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
             timer = Timer()
             timer.schedule(object : TimerTask() {
                 override fun run() {
-                    saveNote()
+                    activity?.runOnUiThread {
+                        saveNote()
+                    }
                 }
             }, SAVE_DELAY)
 
@@ -77,6 +79,7 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
 
             if (noteId == null) {
                 it.supportActionBar?.title = getString(R.string.new_note_title)
+                setEditListener()
             } else {
                 model.loadNote(noteId)
             }
