@@ -29,6 +29,7 @@ class SplashFragment : BaseFragment<Boolean?, SplashViewState>() {
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
+    //todo 25.03.19 moved auth in main fragment
     override fun onResume() {
         super.onResume()
         Handler().postDelayed({ model.requestUser() }, START_DELAY)
