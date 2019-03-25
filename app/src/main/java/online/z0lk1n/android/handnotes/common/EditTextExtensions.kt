@@ -5,8 +5,9 @@ import android.text.TextWatcher
 import android.widget.EditText
 import java.util.*
 
-fun EditText.onChange(delay: Long, function: () -> Unit) =
-    addTextChangedListener(object : TextWatcher {
+//fixme drop app here
+private fun getTextChangeWatcher(delay: Long, function: () -> Unit): TextWatcher {
+    return object : TextWatcher {
         private var timer = Timer()
 
         override fun afterTextChanged(s: Editable?) {
@@ -24,4 +25,11 @@ fun EditText.onChange(delay: Long, function: () -> Unit) =
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-    })
+    }
+}
+
+fun EditText.onChange(delay: Long, function: () -> Unit) =
+    addTextChangedListener(getTextChangeWatcher(delay, function))
+
+fun EditText.removeOnChange(delay: Long, function: () -> Unit) =
+    removeTextChangedListener(getTextChangeWatcher(delay, function))

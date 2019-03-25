@@ -10,8 +10,10 @@ import online.z0lk1n.android.handnotes.data.entity.User
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 import online.z0lk1n.android.handnotes.model.NoteResult
 
-class FireStoreProvider(private val firebaseAuth: FirebaseAuth,
-                        private val store: FirebaseFirestore) : RemoteDataProvider {
+class FireStoreProvider(
+    private val firebaseAuth: FirebaseAuth,
+    private val store: FirebaseFirestore
+) : RemoteDataProvider {
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
@@ -75,4 +77,15 @@ class FireStoreProvider(private val firebaseAuth: FirebaseAuth,
             value = NoteResult.Error(e)
         }
     }
+
+    override fun deleteNote(noteId: String): LiveData<NoteResult> =
+        MutableLiveData<NoteResult>().apply {
+            getUserNotesCollection().document(noteId).delete()
+                .addOnSuccessListener {
+                    value = NoteResult.Success(null)
+                }
+                .addOnFailureListener {
+                    value = NoteResult.Error(it)
+                }
+        }
 }

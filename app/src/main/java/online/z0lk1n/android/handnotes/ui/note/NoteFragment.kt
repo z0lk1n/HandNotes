@@ -4,11 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
 import online.z0lk1n.android.handnotes.common.onChange
+import online.z0lk1n.android.handnotes.common.removeOnChange
 import online.z0lk1n.android.handnotes.common.toStringFormat
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
@@ -17,15 +19,18 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class NoteFragment : BaseFragment<Note?, NoteViewState>() {
+class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
 
     companion object {
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
         private const val SAVE_DELAY = 500L
     }
 
-    private var note: Note? = null
     override val model: NoteViewModel by viewModel()
+    private var note: Note? = null
+    private val navController by lazy {
+        NavHostFragment.findNavController(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,13 +60,12 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
                 model.loadNote(noteId)
             }
         }
-
-        et_title.onChange(SAVE_DELAY) { saveNote() }
-        et_body.onChange(SAVE_DELAY) { saveNote() }
     }
 
-    override fun renderData(data: Note?) {
-        note = data
+    override fun renderData(data: NoteViewState.Data) {
+        if (data.isDeleted) navController.navigate(R.id.toMainFragment)
+
+        this.note = data.note
         initView()
     }
 
@@ -71,9 +75,10 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
                 supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
                 toolbar.setBackgroundColor(color.getColorResId(this))
             }
-
+            removeEditListener()
             et_title.setText(title)
             et_body.setText(text)
+            setEditListener()
         }
     }
 
@@ -123,7 +128,18 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>() {
 
     }
 
+    //todo 25.03.19 add dialog
     private fun deleteNote() {
+        model.deleteNote()
+    }
 
+    private fun setEditListener() {
+        et_title.onChange(SAVE_DELAY) { saveNote() }
+        et_body.onChange(SAVE_DELAY) { saveNote() }
+    }
+
+    private fun removeEditListener() {
+        et_title.removeOnChange(SAVE_DELAY) { saveNote() }
+        et_body.removeOnChange(SAVE_DELAY) { saveNote() }
     }
 }
