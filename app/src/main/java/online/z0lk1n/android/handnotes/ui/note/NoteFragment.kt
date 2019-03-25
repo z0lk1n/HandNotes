@@ -2,6 +2,8 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.NavHostFragment
@@ -9,8 +11,6 @@ import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
-import online.z0lk1n.android.handnotes.common.onChange
-import online.z0lk1n.android.handnotes.common.removeOnChange
 import online.z0lk1n.android.handnotes.common.toStringFormat
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
@@ -31,6 +31,26 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
     private var color = Note.Color.WHITE
     private val navController by lazy {
         NavHostFragment.findNavController(this)
+    }
+
+    private val textChangeWatcher = object : TextWatcher {
+        private var timer = Timer()
+
+        override fun afterTextChanged(s: Editable?) {
+            timer.cancel()
+            timer = Timer()
+            timer.schedule(object : TimerTask() {
+                override fun run() {
+                    saveNote()
+                }
+            }, SAVE_DELAY)
+
+            saveNote()
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     override fun onCreateView(
@@ -159,12 +179,12 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
     }
 
     private fun setEditListener() {
-        et_title.onChange(SAVE_DELAY) { saveNote() }
-        et_body.onChange(SAVE_DELAY) { saveNote() }
+        et_title.addTextChangedListener(textChangeWatcher)
+        et_body.addTextChangedListener(textChangeWatcher)
     }
 
     private fun removeEditListener() {
-        et_title.removeOnChange(SAVE_DELAY) { saveNote() }
-        et_body.removeOnChange(SAVE_DELAY) { saveNote() }
+        et_title.removeTextChangedListener(textChangeWatcher)
+        et_body.removeTextChangedListener(textChangeWatcher)
     }
 }
