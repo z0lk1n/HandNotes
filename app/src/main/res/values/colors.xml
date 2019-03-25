@@ -6,6 +6,11 @@
 
     <color name="black">#000000</color>
 
+    <color name="main_red">#D00D1B</color>
+    <color name="main_black">#0A0A0A</color>
+    <color name="main_gray">#424038</color>
+    <color name="main_white">#EDE3C0</color>
+
     <color name="white">#F5F5F5</color>
     <color name="yellow">#FFF59D</color>
     <color name="green">#81C784</color>

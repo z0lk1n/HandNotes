@@ -13,4 +13,6 @@
     <string name="btn_ok">OK</string>
     <string name="btn_retry">Retry</string>
     <string name="operation_canceled">Oops, we had a problem connection.</string>
+    <string name="menu_title_change_color">Change color</string>
+    <string name="menu_title_delete">Delete</string>
 </resources>

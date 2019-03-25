@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_note.view.*
+import android.widget.TextView
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
 import online.z0lk1n.android.handnotes.data.entity.Note
@@ -33,13 +33,16 @@ class NotesRVAdapter(val onItemClick: ((Note) -> Unit)? = null) : RecyclerView.A
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(note: Note) = with(itemView) {
-            tv_title.text = note.title
-            tv_text.text = note.text
+        private val titleTextView = itemView.findViewById<TextView>(R.id.tv_title)
+        private val textTextView = itemView.findViewById<TextView>(R.id.tv_text)
 
-            setBackgroundColor(note.color.getColorResId(context))
+        fun bind(note: Note) = with(note) {
+            titleTextView.text = note.title
+            textTextView.text = note.text
 
-            setOnClickListener {
+            itemView.setBackgroundColor(note.color.getColorResId(itemView.context))
+
+            itemView.setOnClickListener {
                 onItemClick?.invoke(note)
             }
         }

@@ -20,13 +20,13 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
         private const val RC_SIGN_IN = 666
     }
 
-    abstract val viewModel: BaseViewModel<T, S>
+    abstract val model: BaseViewModel<T, S>
     private var tryConnect: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getViewState().observe(this, Observer<S> { viewState ->
+        model.getViewState().observe(this, Observer<S> { viewState ->
             viewState?.apply {
                 data?.let { renderData(it) }
                 error?.let { renderError(it) }

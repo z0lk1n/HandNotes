@@ -1,6 +1,5 @@
 package online.z0lk1n.android.handnotes.ui.main
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -13,18 +12,20 @@ import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
-    override val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    override val model: MainViewModel by viewModel()
 
     private val navController by lazy {
         NavHostFragment.findNavController(this)
     }
+
+    private val screenConfiguration: ScreenConfiguration by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +51,7 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
 
         rv_notes.layoutManager = GridLayoutManager(
             this.requireContext(),
-            ScreenConfiguration(this.requireContext()).calculateNumberOfColumns()
+            screenConfiguration.calculateNumberOfColumns()
         )
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
@@ -70,8 +71,8 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     }
 
     override fun onPause() {
-        super.onPause()
         fab.setOnClickListener(null)
+        super.onPause()
     }
 
     override fun onLogout() {
@@ -98,6 +99,6 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean =
         when (item?.itemId) {
             R.id.logout -> showLogoutDialog().let { true }
-            else -> false
+            else -> super.onOptionsItemSelected(item)
         }
 }
