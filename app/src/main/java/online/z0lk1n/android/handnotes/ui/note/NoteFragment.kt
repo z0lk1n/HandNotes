@@ -137,7 +137,6 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
     override fun onPause() {
         if (color_picker.isOpen) {
             color_picker.close()
-            return
         }
         hideKeyboard()
 

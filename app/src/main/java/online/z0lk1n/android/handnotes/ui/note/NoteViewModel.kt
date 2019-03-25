@@ -12,7 +12,7 @@ class NoteViewModel(private val repository: NotesRepository) :
         get() = viewStateLiveData.value?.data?.note
 
     fun save(note: Note) {
-        viewStateLiveData.value = NoteViewState(NoteViewState.Data(note = note))
+        viewStateLiveData.postValue(NoteViewState(NoteViewState.Data(note = note)))
     }
 
     override fun onCleared() {

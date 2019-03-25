@@ -30,5 +30,4 @@ val mainModule = module {
 
 val noteModule = module {
     viewModel { NoteViewModel(get()) }
-
 }
