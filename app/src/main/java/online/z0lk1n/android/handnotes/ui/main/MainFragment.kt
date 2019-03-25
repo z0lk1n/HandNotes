@@ -12,6 +12,7 @@ import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import online.z0lk1n.android.handnotes.util.ScreenConfiguration
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
@@ -23,6 +24,8 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     private val navController by lazy {
         NavHostFragment.findNavController(this)
     }
+
+    private val screenConfiguration: ScreenConfiguration by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +51,7 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
 
         rv_notes.layoutManager = GridLayoutManager(
             this.requireContext(),
-            ScreenConfiguration(this.requireContext()).calculateNumberOfColumns()
+            screenConfiguration.calculateNumberOfColumns()
         )
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
@@ -68,8 +71,8 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
     }
 
     override fun onPause() {
-        super.onPause()
         fab.setOnClickListener(null)
+        super.onPause()
     }
 
     override fun onLogout() {

@@ -28,6 +28,7 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
 
     override val model: NoteViewModel by viewModel()
     private var note: Note? = null
+    private var color = Note.Color.WHITE
     private val navController by lazy {
         NavHostFragment.findNavController(this)
     }
@@ -60,12 +61,26 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
                 model.loadNote(noteId)
             }
         }
+
+        color_picker.onColorClickListener = {
+            color = it
+            setToolbarColor(it)
+            saveNote()
+        }
+    }
+
+    private fun setToolbarColor(color: Note.Color) {
+        (activity as MainActivity).run {
+            toolbar.setBackgroundColor(color.getColorResId(this))
+            color_picker.setBackgroundColor(color.getColorResId(this))
+        }
     }
 
     override fun renderData(data: NoteViewState.Data) {
         if (data.isDeleted) navController.navigate(R.id.toMainFragment)
 
         this.note = data.note
+        data.note?.let { color = it.color }
         initView()
     }
 
@@ -88,7 +103,8 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
         note = note?.copy(
             title = et_title.text.toString(),
             text = et_body.text.toString(),
-            lastChanged = Date()
+            lastChanged = Date(),
+            color = color
         ) ?: Note(
             UUID.randomUUID().toString(),
             et_title.text.toString(),
@@ -99,7 +115,12 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
     }
 
     override fun onPause() {
+        if (color_picker.isOpen) {
+            color_picker.close()
+            return
+        }
         hideKeyboard()
+
         super.onPause()
     }
 
@@ -125,7 +146,11 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
         }
 
     private fun togglePalette() {
-
+        if (color_picker.isOpen) {
+            color_picker.close()
+        } else {
+            color_picker.open()
+        }
     }
 
     //todo 25.03.19 add dialog
