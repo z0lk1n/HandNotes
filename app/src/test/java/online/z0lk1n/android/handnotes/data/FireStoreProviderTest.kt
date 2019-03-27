@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import io.mockk.*
-import junit.framework.Assert
+import junit.framework.Assert.*
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 import online.z0lk1n.android.handnotes.data.provider.FireStoreProvider
@@ -33,7 +33,6 @@ class FireStoreProviderTest {
 
     private val provider: FireStoreProvider = FireStoreProvider(mockAuth, mockDb)
 
-
     @Before
     fun setup() {
         clearMocks(mockCollection, mockDocument1, mockDocument2, mockDocument3)
@@ -54,7 +53,7 @@ class FireStoreProviderTest {
         provider.subscribeToAllNotes().observeForever {
             result = (it as? NoteResult.Error)?.error
         }
-        Assert.assertTrue(result is NoAuthException)
+        assertTrue(result is NoAuthException)
     }
 
     @Test
@@ -71,7 +70,7 @@ class FireStoreProviderTest {
             result = (it as? NoteResult.Success<List<Note>>)?.data
         }
         slot.captured.onEvent(mockSnapshot, null)
-        Assert.assertEquals(testNotes, result)
+        assertEquals(testNotes, result)
     }
 
     @Test
@@ -87,8 +86,8 @@ class FireStoreProviderTest {
         }
         slot.captured.onEvent(null, testError)
 
-        Assert.assertNotNull(result)
-        Assert.assertEquals(testError, result)
+        assertNotNull(result)
+        assertEquals(testError, result)
     }
 
     @Test
@@ -116,8 +115,8 @@ class FireStoreProviderTest {
 
         slot.captured.onSuccess(null)
 
-        Assert.assertNotNull(result)
-        Assert.assertEquals(testNotes[0], result)
+        assertNotNull(result)
+        assertEquals(testNotes[0], result)
     }
 
     //TODO: tests for delete

@@ -1,6 +1,7 @@
 package online.z0lk1n.android.handnotes.ui.main
 
 import android.arch.lifecycle.Observer
+import android.support.annotation.VisibleForTesting
 import online.z0lk1n.android.handnotes.data.NotesRepository
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.model.NoteResult
@@ -29,7 +30,8 @@ class MainViewModel(private val repository: NotesRepository) :
         repositoryNotes.observeForever(notesObserver)
     }
 
-    override fun onCleared() {
+    @VisibleForTesting
+    public override fun onCleared() {
         repositoryNotes.removeObserver(notesObserver)
     }
 }
