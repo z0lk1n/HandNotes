@@ -61,13 +61,13 @@ class ColorCircleView @JvmOverloads constructor(
         val a = context.obtainStyledAttributes(attrs, R.styleable.ColorCircleView)
 
         val defRadiusPx = dip(defRadiusDp).toFloat()
-        radius = a.getDimension(R.styleable.ColorCircleView_circleRadius, defRadiusPx)
-        fillColorRes = a.getResourceId(R.styleable.ColorCircleView_fillColor, R.color.white)
+        radius = a.getDimension(R.styleable.ColorCircleView_ccv_circle_radius, defRadiusPx)
+        fillColorRes = a.getResourceId(R.styleable.ColorCircleView_ccv_fill_color, R.color.white)
 
         val defStrokeWidthPx = dip(defStrokeWidthDp).toFloat()
-        strokeWidth = a.getDimension(R.styleable.ColorCircleView_strokeWidth, defStrokeWidthPx)
+        strokeWidth = a.getDimension(R.styleable.ColorCircleView_ccv_stroke_width, defStrokeWidthPx)
 
-        strokeColorRes = a.getResourceId(R.styleable.ColorCircleView_strokeColor, R.color.black)
+        strokeColorRes = a.getResourceId(R.styleable.ColorCircleView_ccv_stroke_color, R.color.black)
         a.recycle()
     }
 
@@ -91,6 +91,4 @@ class ColorCircleView @JvmOverloads constructor(
         canvas.drawCircle(center.first, center.second, radius, strokePaint)
         canvas.drawCircle(center.first, center.second, radius - strokeWidth, fillPaint)
     }
-
-
 }

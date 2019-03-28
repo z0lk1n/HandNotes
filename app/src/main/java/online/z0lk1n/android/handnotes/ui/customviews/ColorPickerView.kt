@@ -10,7 +10,11 @@ import android.widget.LinearLayout
 import online.z0lk1n.android.handnotes.common.getColorRes
 import online.z0lk1n.android.handnotes.data.entity.Note
 
-class ColorPickerView : LinearLayout {
+class ColorPickerView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
 
     companion object {
         private const val PALETTE_ANIMATION_DURATION = 150L
@@ -53,9 +57,7 @@ class ColorPickerView : LinearLayout {
         }
     }
 
-    constructor(context: Context) : this(context, null, 0)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
 
@@ -68,7 +70,6 @@ class ColorPickerView : LinearLayout {
                     setOnClickListener { onColorClickListener(it.tag as Note.Color) }
                 })
         }
-
     }
 
     override fun onAttachedToWindow() {
