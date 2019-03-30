@@ -1,7 +1,6 @@
 package online.z0lk1n.android.handnotes.ui.base
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -11,28 +10,49 @@ import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.github.ajalt.timberkt.Timber
 import kotlinx.android.synthetic.main.fragment_splash.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumeEach
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
+import kotlin.coroutines.CoroutineContext
 
-abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
+@ObsoleteCoroutinesApi
+@ExperimentalCoroutinesApi
+abstract class BaseFragment<S> : Fragment(), CoroutineScope {
 
     companion object {
         private const val RC_SIGN_IN = 666
     }
 
-    abstract val model: BaseViewModel<T, S>
+    override val coroutineContext: CoroutineContext by lazy {
+        Dispatchers.Main + Job()
+    }
+
+    private lateinit var dataJob: Job
+    private lateinit var errorJob: Job
+    abstract val model: BaseViewModel<S>
     private var tryConnect: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        model.getViewState().observe(this, Observer<S> { viewState ->
-            viewState?.apply {
-                data?.let { renderData(it) }
-                error?.let { renderError(it) }
-            }
-        })
+        dataJob = launch {
+            model.getViewState().consumeEach { renderData(it) }
+        }
+
+        errorJob = launch {
+            model.getErrorChannel().consumeEach { renderError(it) }
+        }
     }
+
+    override fun onDestroyView() {
+        dataJob.cancel()
+        errorJob.cancel()
+        coroutineContext.cancel()
+        super.onDestroyView()
+    }
+
+    abstract fun renderData(data: S)
 
     protected fun renderError(error: Throwable?) {
         when (error) {
@@ -84,8 +104,6 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
                 show()
             }
     }
-
-    abstract fun renderData(data: T)
 
     protected fun showError(error: String) {
         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
