@@ -51,6 +51,11 @@ dependencies {
     implementation "org.koin:koin-android-viewmodel:$koin_version"
     implementation "org.koin:koin-android:$koin_version"
 
+    //Coroutines
+    def coroutines_version = "1.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
     // Timberkt
     implementation 'com.github.ajalt:timberkt:1.5.1'
 
