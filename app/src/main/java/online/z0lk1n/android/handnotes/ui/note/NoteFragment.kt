@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.coroutines.*
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
 import online.z0lk1n.android.handnotes.common.toStringFormat
@@ -19,7 +20,9 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
+class NoteFragment : BaseFragment<NoteData>() {
 
     companion object {
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
@@ -34,20 +37,14 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
     }
 
     private val textChangeWatcher = object : TextWatcher {
-        private var timer = Timer()
+        private var job: Job? = null
 
         override fun afterTextChanged(s: Editable?) {
-            timer.cancel()
-            timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    activity?.runOnUiThread {
-                        saveNote()
-                    }
-                }
-            }, SAVE_DELAY)
-
-            saveNote()
+            if (job?.isCancelled == false) job?.cancel()
+            job = launch {
+                delay(SAVE_DELAY)
+                saveNote()
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -99,7 +96,7 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
         }
     }
 
-    override fun renderData(data: NoteViewState.Data) {
+    override fun renderData(data: NoteData) {
         if (data.isDeleted) navController.navigate(R.id.toMainFragment)
 
         this.note = data.note
@@ -111,12 +108,20 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
         note?.run {
             (activity as MainActivity).run {
                 supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
+                //todo 31.03.2019 maybe fix this
                 toolbar.setBackgroundColor(color.getColorResId(this))
             }
             removeEditListener()
             et_title.setText(title)
             et_body.setText(text)
             setEditListener()
+
+            et_title.text?.let {
+                et_title.setSelection(it.length)
+            }
+            et_body.text?.let {
+                et_body.setSelection(it.length)
+            }
         }
     }
 
@@ -175,7 +180,7 @@ class NoteFragment : BaseFragment<NoteViewState.Data, NoteViewState>() {
         }
     }
 
-    //todo 25.03.19 add dialog
+    //todo 25.03.2019 add dialog
     private fun deleteNote() {
         model.deleteNote()
     }

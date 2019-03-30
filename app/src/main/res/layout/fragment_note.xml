@@ -9,7 +9,7 @@
 
     <include layout="@layout/toolbar"/>
 
-    <!--todo 25.03.19 move in bottom -->
+    <!--todo 25.03.2019 move in bottom -->
     <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
 
     </HorizontalScrollView>
 
-    <!--todo 25.03.19 add progress bar-->
+    <!--todo 25.03.2019 add progress bar-->
     <android.support.design.widget.TextInputLayout
             android:id="@+id/til_title"
             android:layout_width="match_parent"
