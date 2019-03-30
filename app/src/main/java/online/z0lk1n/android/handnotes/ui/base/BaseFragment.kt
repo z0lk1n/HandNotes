@@ -48,8 +48,12 @@ abstract class BaseFragment<S> : Fragment(), CoroutineScope {
     override fun onDestroyView() {
         dataJob.cancel()
         errorJob.cancel()
-        coroutineContext.cancel()
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        coroutineContext.cancel()
+        super.onDestroy()
     }
 
     abstract fun renderData(data: S)
