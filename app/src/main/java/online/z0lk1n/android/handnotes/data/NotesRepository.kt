@@ -5,13 +5,13 @@ import online.z0lk1n.android.handnotes.data.provider.RemoteDataProvider
 
 class NotesRepository(private val remoteDataProvider: RemoteDataProvider) {
 
-    fun getNoteById(id: String) = remoteDataProvider.getNoteById(id)
+    suspend fun getNoteById(id: String) = remoteDataProvider.getNoteById(id)
 
-    fun saveNote(note: Note) = remoteDataProvider.saveNote(note)
+    suspend fun saveNote(note: Note) = remoteDataProvider.saveNote(note)
 
     fun getNotes() = remoteDataProvider.subscribeToAllNotes()
 
-    fun getCurrentUser() = remoteDataProvider.getCurrentUser()
+    suspend fun getCurrentUser() = remoteDataProvider.getCurrentUser()
 
-    fun deleteNote(noteId: String) = remoteDataProvider.deleteNote(noteId)
+    suspend fun deleteNote(noteId: String) = remoteDataProvider.deleteNote(noteId)
 }
