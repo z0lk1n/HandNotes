@@ -1,5 +1,6 @@
 package online.z0lk1n.android.handnotes.ui.note
 
+import android.support.annotation.VisibleForTesting
 import online.z0lk1n.android.handnotes.data.NotesRepository
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.model.NoteResult
@@ -15,7 +16,8 @@ class NoteViewModel(private val repository: NotesRepository) :
         viewStateLiveData.postValue(NoteViewState(NoteViewState.Data(note = note)))
     }
 
-    override fun onCleared() {
+    @VisibleForTesting
+    public override fun onCleared() {
         currentNote?.let {
             repository.saveNote(it)
         }
