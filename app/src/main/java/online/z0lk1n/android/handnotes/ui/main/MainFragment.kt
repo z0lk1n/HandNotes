@@ -8,6 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
@@ -15,7 +17,9 @@ import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
+class MainFragment : BaseFragment<List<Note>?>(),
     LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
