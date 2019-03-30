@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SplashFragment : BaseFragment<Boolean?, SplashViewState>() {
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
+class SplashFragment : BaseFragment<Boolean?>() {
 
     companion object {
         private const val START_DELAY = 1000L

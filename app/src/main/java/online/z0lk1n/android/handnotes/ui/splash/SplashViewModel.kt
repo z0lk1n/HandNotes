@@ -1,17 +1,19 @@
 package online.z0lk1n.android.handnotes.ui.splash
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import online.z0lk1n.android.handnotes.data.NotesRepository
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 import online.z0lk1n.android.handnotes.ui.base.BaseViewModel
 
-class SplashViewModel(private val repository: NotesRepository) :
-    BaseViewModel<Boolean?, SplashViewState>() {
+@ExperimentalCoroutinesApi
+class SplashViewModel(private val repository: NotesRepository) : BaseViewModel<Boolean?>() {
 
     fun requestUser() {
-        repository.getCurrentUser().observeForever {
-            viewStateLiveData.value = it?.let {
-                SplashViewState(true)
-            } ?: SplashViewState(error = NoAuthException())
+        launch {
+            repository.getCurrentUser()?.let {
+                setData(true)
+            } ?: setError(NoAuthException())
         }
     }
 }
