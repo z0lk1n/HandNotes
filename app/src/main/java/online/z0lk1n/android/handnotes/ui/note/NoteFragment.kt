@@ -2,6 +2,7 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.NavHostFragment
@@ -30,6 +31,7 @@ class NoteFragment : BaseFragment<NoteData>() {
     private var note: Note? = null
     private var color = Note.Color.WHITE
     private var isNoteDeleted: Boolean = false
+    private var snackbar: Snackbar? = null
     private val navController by lazy {
         NavHostFragment.findNavController(this)
     }
@@ -104,7 +106,10 @@ class NoteFragment : BaseFragment<NoteData>() {
     }
 
     private fun saveNote() {
-        if (et_title.text.isNullOrBlank() && et_body.text.isNullOrBlank()) return
+        if (isNoteDeleted ||
+            (et_title.text.isNullOrBlank()
+                    && et_body.text.isNullOrBlank())
+        ) return
 
         note = note?.copy(
             title = et_title.text.toString(),
@@ -121,9 +126,9 @@ class NoteFragment : BaseFragment<NoteData>() {
     }
 
     override fun onPause() {
-        if (!isNoteDeleted) saveNote()
-        if (color_picker.isOpen) color_picker.close()
+        saveNote()
         hideKeyboard()
+        closeSnackbar()
 
         super.onPause()
     }
@@ -157,8 +162,18 @@ class NoteFragment : BaseFragment<NoteData>() {
         }
     }
 
-    //todo 25.03.2019 add dialog
     private fun deleteNote() {
-        model.deleteNote()
+        snackbar = Snackbar.make(
+            ll_note,
+            R.string.note_text_delete,
+            Snackbar.LENGTH_LONG
+        ).apply {
+            setAction(R.string.note_btn_delete) { model.deleteNote() }
+        }
+        snackbar?.show()
+    }
+
+    private fun closeSnackbar() {
+        snackbar?.dismiss()
     }
 }
