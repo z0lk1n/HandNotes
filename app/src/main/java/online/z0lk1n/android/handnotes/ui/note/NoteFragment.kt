@@ -2,14 +2,13 @@ package online.z0lk1n.android.handnotes.ui.note
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_note.*
 import kotlinx.android.synthetic.main.toolbar.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.common.getColorResId
 import online.z0lk1n.android.handnotes.common.toStringFormat
@@ -19,37 +18,20 @@ import online.z0lk1n.android.handnotes.ui.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-
 @ExperimentalCoroutinesApi
 @ObsoleteCoroutinesApi
 class NoteFragment : BaseFragment<NoteData>() {
 
     companion object {
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
-        private const val SAVE_DELAY = 500L
     }
 
     override val model: NoteViewModel by viewModel()
     private var note: Note? = null
     private var color = Note.Color.WHITE
+    private var isNoteDeleted: Boolean = false
     private val navController by lazy {
         NavHostFragment.findNavController(this)
-    }
-
-    private val textChangeWatcher = object : TextWatcher {
-        private var job: Job? = null
-
-        override fun afterTextChanged(s: Editable?) {
-            if (job?.isCancelled == false) job?.cancel()
-            job = launch {
-                delay(SAVE_DELAY)
-                saveNote()
-            }
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
     override fun onCreateView(
@@ -76,7 +58,6 @@ class NoteFragment : BaseFragment<NoteData>() {
 
             if (noteId == null) {
                 it.supportActionBar?.title = getString(R.string.new_note_title)
-                setEditListener()
             } else {
                 model.loadNote(noteId)
             }
@@ -97,7 +78,10 @@ class NoteFragment : BaseFragment<NoteData>() {
     }
 
     override fun renderData(data: NoteData) {
-        if (data.isDeleted) navController.navigate(R.id.toMainFragment)
+        if (data.isDeleted) {
+            isNoteDeleted = true
+            navController.navigate(R.id.toMainFragment)
+        }
 
         this.note = data.note
         data.note?.let { color = it.color }
@@ -108,25 +92,19 @@ class NoteFragment : BaseFragment<NoteData>() {
         note?.run {
             (activity as MainActivity).run {
                 supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
-                //todo 31.03.2019 maybe fix this
                 toolbar.setBackgroundColor(color.getColorResId(this))
             }
-            removeEditListener()
+
             et_title.setText(title)
             et_body.setText(text)
-            setEditListener()
 
-            et_title.text?.let {
-                et_title.setSelection(it.length)
-            }
-            et_body.text?.let {
-                et_body.setSelection(it.length)
-            }
+            et_title.text?.let { et_title.setSelection(it.length) }
+            et_body.text?.let { et_body.setSelection(it.length) }
         }
     }
 
     private fun saveNote() {
-        if (et_title.text.isNullOrBlank() || et_title.text!!.length < 3) return
+        if (et_title.text.isNullOrBlank() && et_body.text.isNullOrBlank()) return
 
         note = note?.copy(
             title = et_title.text.toString(),
@@ -143,9 +121,8 @@ class NoteFragment : BaseFragment<NoteData>() {
     }
 
     override fun onPause() {
-        if (color_picker.isOpen) {
-            color_picker.close()
-        }
+        if (!isNoteDeleted) saveNote()
+        if (color_picker.isOpen) color_picker.close()
         hideKeyboard()
 
         super.onPause()
@@ -183,15 +160,5 @@ class NoteFragment : BaseFragment<NoteData>() {
     //todo 25.03.2019 add dialog
     private fun deleteNote() {
         model.deleteNote()
-    }
-
-    private fun setEditListener() {
-        et_title.addTextChangedListener(textChangeWatcher)
-        et_body.addTextChangedListener(textChangeWatcher)
-    }
-
-    private fun removeEditListener() {
-        et_title.removeTextChangedListener(textChangeWatcher)
-        et_body.removeTextChangedListener(textChangeWatcher)
     }
 }

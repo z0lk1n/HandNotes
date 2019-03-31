@@ -4,4 +4,4 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun Date.toStringFormat(format: String) =
-    SimpleDateFormat(format, Locale.getDefault()).format(this)
+    SimpleDateFormat(format, Locale.getDefault()).format(this)!!
