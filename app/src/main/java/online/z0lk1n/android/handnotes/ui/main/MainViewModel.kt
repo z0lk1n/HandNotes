@@ -1,37 +1,36 @@
 package online.z0lk1n.android.handnotes.ui.main
 
-import android.arch.lifecycle.Observer
 import android.support.annotation.VisibleForTesting
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import online.z0lk1n.android.handnotes.data.NotesRepository
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.model.NoteResult
 import online.z0lk1n.android.handnotes.ui.base.BaseViewModel
 
+@ObsoleteCoroutinesApi
+@ExperimentalCoroutinesApi
 class MainViewModel(private val repository: NotesRepository) :
-    BaseViewModel<List<Note>?, MainViewState>() {
+    BaseViewModel<List<Note>?>() {
 
-    private val notesObserver = Observer<NoteResult> {
-        it ?: let { return@Observer }
+    private val notesChannel = repository.getNotes()
 
-        when (it) {
-            is NoteResult.Success<*> -> {
-                viewStateLiveData.value = MainViewState(it.data as? List<Note>)
-            }
-            is NoteResult.Error -> {
-                viewStateLiveData.value = MainViewState(error = it.error)
+    init {
+        launch {
+            notesChannel.consumeEach {
+                when (it) {
+                    is NoteResult.Success<*> -> setData(it.data as? List<Note>)
+                    is NoteResult.Error -> setError(it.error)
+                }
             }
         }
     }
 
-    private val repositoryNotes = repository.getNotes()
-
-    init {
-        viewStateLiveData.value = MainViewState()
-        repositoryNotes.observeForever(notesObserver)
-    }
-
     @VisibleForTesting
     public override fun onCleared() {
-        repositoryNotes.removeObserver(notesObserver)
+        notesChannel.cancel()
+        super.onCleared()
     }
 }

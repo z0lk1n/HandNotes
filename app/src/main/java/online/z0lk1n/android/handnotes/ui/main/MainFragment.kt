@@ -8,6 +8,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import online.z0lk1n.android.handnotes.R
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.ui.base.BaseFragment
@@ -15,7 +17,9 @@ import online.z0lk1n.android.handnotes.util.ScreenConfiguration
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
+class MainFragment : BaseFragment<List<Note>?>(),
     LogoutDialog.LogoutListener {
 
     lateinit var adapter: NotesRVAdapter
@@ -55,6 +59,10 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
         )
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
+
+        fab.setOnClickListener {
+            navController.navigate(R.id.toNoteFragment)
+        }
     }
 
     override fun renderData(data: List<Note>?) {
@@ -63,24 +71,12 @@ class MainFragment : BaseFragment<List<Note>?, MainViewState>(),
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        fab.setOnClickListener {
-            navController.navigate(R.id.toNoteFragment)
-        }
-    }
-
-    override fun onPause() {
-        fab.setOnClickListener(null)
-        super.onPause()
-    }
-
     override fun onLogout() {
         activity?.run {
             AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    navController.navigate(R.id.toSplashFragment)
+                    (this as MainActivity).checkAuth()
                 }
         }
     }

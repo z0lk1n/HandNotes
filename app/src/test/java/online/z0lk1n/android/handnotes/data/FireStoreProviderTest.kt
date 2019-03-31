@@ -7,12 +7,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import io.mockk.*
-import junit.framework.Assert.*
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.data.errors.NoAuthException
 import online.z0lk1n.android.handnotes.data.provider.FireStoreProvider
 import online.z0lk1n.android.handnotes.model.NoteResult
-import online.z0lk1n.android.handnotes.ui.note.NoteViewState
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

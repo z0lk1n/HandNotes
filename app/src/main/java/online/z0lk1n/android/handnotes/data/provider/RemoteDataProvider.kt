@@ -1,19 +1,21 @@
 package online.z0lk1n.android.handnotes.data.provider
 
-import android.arch.lifecycle.LiveData
+import kotlinx.coroutines.channels.ReceiveChannel
 import online.z0lk1n.android.handnotes.data.entity.Note
 import online.z0lk1n.android.handnotes.data.entity.User
 import online.z0lk1n.android.handnotes.model.NoteResult
 
 interface RemoteDataProvider {
 
-    fun getNoteById(id: String): LiveData<NoteResult>
+    suspend fun getNoteById(id: String): Note
 
-    fun saveNote(note: Note): LiveData<NoteResult>
+    suspend fun saveNote(note: Note): Note
 
-    fun subscribeToAllNotes(): LiveData<NoteResult>
+    fun subscribeToAllNotes(): ReceiveChannel<NoteResult>
 
-    fun getCurrentUser(): LiveData<User?>
+    suspend fun getCurrentUser(): User?
 
-    fun deleteNote(noteId: String): LiveData<NoteResult>
+    suspend fun deleteNote(noteId: String)
+
+    fun isHasUser(): Boolean
 }
