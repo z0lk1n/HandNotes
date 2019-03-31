@@ -16,4 +16,6 @@ interface RemoteDataProvider {
     suspend fun getCurrentUser(): User?
 
     suspend fun deleteNote(noteId: String)
+
+    fun isHasUser(): Boolean
 }

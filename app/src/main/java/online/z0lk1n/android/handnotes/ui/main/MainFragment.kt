@@ -59,6 +59,10 @@ class MainFragment : BaseFragment<List<Note>?>(),
         )
         rv_notes.itemAnimator = DefaultItemAnimator()
         rv_notes.adapter = adapter
+
+        fab.setOnClickListener {
+            navController.navigate(R.id.toNoteFragment)
+        }
     }
 
     override fun renderData(data: List<Note>?) {
@@ -67,24 +71,12 @@ class MainFragment : BaseFragment<List<Note>?>(),
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        fab.setOnClickListener {
-            navController.navigate(R.id.toNoteFragment)
-        }
-    }
-
-    override fun onPause() {
-        fab.setOnClickListener(null)
-        super.onPause()
-    }
-
     override fun onLogout() {
         activity?.run {
             AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    navController.navigate(R.id.toSplashFragment)
+                    (this as MainActivity).checkAuth()
                 }
         }
     }

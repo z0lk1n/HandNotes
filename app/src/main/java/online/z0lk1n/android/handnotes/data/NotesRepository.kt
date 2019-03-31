@@ -14,4 +14,6 @@ class NotesRepository(private val remoteDataProvider: RemoteDataProvider) {
     suspend fun getCurrentUser() = remoteDataProvider.getCurrentUser()
 
     suspend fun deleteNote(noteId: String) = remoteDataProvider.deleteNote(noteId)
+
+    fun isHasUser() = remoteDataProvider.isHasUser()
 }

@@ -28,6 +28,8 @@ class FireStoreProvider(
     private val currentUser
         get() = firebaseAuth.currentUser
 
+    override fun isHasUser(): Boolean = currentUser?.let { true } ?: false
+
     override suspend fun getCurrentUser(): User? = suspendCoroutine { continuation ->
         continuation.resume(currentUser?.let { User(it.displayName ?: "") })
     }
