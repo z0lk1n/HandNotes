@@ -46,6 +46,7 @@ class NoteViewModel(private val repository: NotesRepository) :
     public override fun onCleared() {
         launch {
             note?.let { repository.saveNote(it) }
+            super.onCleared()
         }
     }
 }
