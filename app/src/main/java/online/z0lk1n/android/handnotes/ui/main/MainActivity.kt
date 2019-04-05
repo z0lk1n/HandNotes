@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         private const val RC_SIGN_IN = 666
     }
 
+    private var isShowReconnect: Boolean = true
     private val repository: NotesRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,10 +63,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showReconnectLayout() {
-        setContentView(R.layout.activity_failure)
-        btn_failure.setOnClickListener { startLoginActivity() }
+        if (isShowReconnect) {
+            setContentView(R.layout.activity_failure)
+            btn_failure.setOnClickListener { startLoginActivity() }
+            isShowReconnect = false
+        }
     }
 
     override fun onSupportNavigateUp() =
         Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
 }
+
+//TODO 05.04.19 crash app when change orientation in auth screen
+//TODO 05.04.19 no color toolbar in second time open note
+//TODO 05.04.19 add registration anonymous in id phone
