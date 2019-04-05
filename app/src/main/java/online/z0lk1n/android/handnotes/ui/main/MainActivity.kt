@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MainActivity.RC_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK) {
-                recreate()
+                checkAuth()
             } else {
                 showReconnectLayout()
             }

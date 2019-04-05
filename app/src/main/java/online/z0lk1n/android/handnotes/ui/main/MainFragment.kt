@@ -22,7 +22,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class MainFragment : BaseFragment<List<Note>?>(),
     LogoutDialog.LogoutListener {
 
-    lateinit var adapter: NotesRVAdapter
+    private lateinit var adapter: NotesRVAdapter
     override val model: MainViewModel by viewModel()
 
     private val navController by lazy {
@@ -76,7 +76,8 @@ class MainFragment : BaseFragment<List<Note>?>(),
             AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    (this as MainActivity).checkAuth()
+                    navController.popBackStack()
+                    recreate()
                 }
         }
     }
