@@ -75,5 +75,4 @@ class MainActivity : AppCompatActivity() {
 }
 
 //TODO 05.04.19 crash app when change orientation in auth screen
-//TODO 05.04.19 no color toolbar in second time open note
 //TODO 05.04.19 add registration anonymous in id phone

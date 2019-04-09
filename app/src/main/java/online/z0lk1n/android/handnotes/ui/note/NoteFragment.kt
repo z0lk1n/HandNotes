@@ -52,6 +52,7 @@ class NoteFragment : BaseFragment<NoteData>() {
         setHasOptionsMenu(true)
         val noteId = arguments?.getString(getString(R.string.note_id))
 
+
         activity?.let {
             it as MainActivity
 
@@ -61,8 +62,10 @@ class NoteFragment : BaseFragment<NoteData>() {
             if (noteId == null) {
                 it.supportActionBar?.title = getString(R.string.new_note_title)
             } else {
+                showLoader()
                 model.loadNote(noteId)
             }
+
         }
 
         color_picker.onColorClickListener = {
@@ -92,6 +95,8 @@ class NoteFragment : BaseFragment<NoteData>() {
 
     private fun initView() {
         note?.run {
+            hideLoader()
+
             (activity as MainActivity).run {
                 supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
                 toolbar.setBackgroundColor(color.getColorResId(this))
@@ -175,5 +180,17 @@ class NoteFragment : BaseFragment<NoteData>() {
 
     private fun closeSnackbar() {
         snackbar?.dismiss()
+    }
+
+    private fun showLoader() {
+        pb_note.visibility = View.VISIBLE
+        til_title.visibility = View.GONE
+        et_body.visibility = View.GONE
+    }
+
+    private fun hideLoader() {
+        pb_note.visibility = View.GONE
+        til_title.visibility = View.VISIBLE
+        et_body.visibility = View.VISIBLE
     }
 }

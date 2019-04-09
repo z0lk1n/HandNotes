@@ -1,5 +1,6 @@
 package online.z0lk1n.android.handnotes.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -47,6 +48,8 @@ class MainFragment : BaseFragment<List<Note>?>(),
         setHasOptionsMenu(true)
         (activity as MainActivity).setSupportActionBar(toolbar)
 
+        showLoader()
+
         adapter = NotesRVAdapter {
             val noteBundle = Bundle()
             noteBundle.putString(getString(R.string.note_id), it.id)
@@ -67,6 +70,7 @@ class MainFragment : BaseFragment<List<Note>?>(),
 
     override fun renderData(data: List<Note>?) {
         data?.let {
+            hideLoader()
             adapter.notes = it
         }
     }
@@ -98,4 +102,18 @@ class MainFragment : BaseFragment<List<Note>?>(),
             R.id.logout -> showLogoutDialog().let { true }
             else -> super.onOptionsItemSelected(item)
         }
+
+    @SuppressLint("RestrictedApi")
+    private fun showLoader() {
+        pb_main.visibility = View.VISIBLE
+        rv_notes.visibility = View.GONE
+        fab.visibility = View.GONE
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun hideLoader() {
+        pb_main.visibility = View.GONE
+        rv_notes.visibility = View.VISIBLE
+        fab.visibility = View.VISIBLE
+    }
 }

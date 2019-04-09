@@ -23,7 +23,15 @@
 
     </HorizontalScrollView>
 
-    <!--todo 25.03.2019 add progress bar-->
+    <ProgressBar
+            android:id="@+id/pb_note"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/note_padding"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
     <android.support.design.widget.TextInputLayout
             android:id="@+id/til_title"
             android:layout_width="match_parent"
