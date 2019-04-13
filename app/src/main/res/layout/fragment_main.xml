@@ -36,7 +36,7 @@
                 app:fabSize="normal"
                 android:layout_marginEnd="@dimen/fab_margin"
                 android:layout_marginBottom="@dimen/fab_margin"
-                android:src="@drawable/ic_add_black"
+                android:src="@drawable/ic_add_white"
                 app:layout_anchorGravity="bottom|end"
                 app:layout_anchor="@id/rv_notes"
                 app:layout_behavior=".util.FABBehavior"/>
