@@ -9,12 +9,15 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import online.z0lk1n.android.handnotes.common.getColorRes
 import online.z0lk1n.android.handnotes.data.entity.Note
+import online.z0lk1n.android.handnotes.util.ScreenConfiguration
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
 
 class ColorPickerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr), KoinComponent {
 
     companion object {
         private const val PALETTE_ANIMATION_DURATION = 150L
@@ -23,6 +26,8 @@ class ColorPickerView @JvmOverloads constructor(
         @Dimension(unit = Dimension.DP)
         private const val COLOR_VIEW_PADDING = 8
     }
+
+    private val screenConfiguration: ScreenConfiguration by inject()
 
     var onColorClickListener: (color: Note.Color) -> Unit = { }
 
@@ -60,6 +65,7 @@ class ColorPickerView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
+        minimumWidth = screenConfiguration.getScreenWidth()
 
         Note.Color.values().forEach { color ->
             addView(

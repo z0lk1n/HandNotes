@@ -10,7 +10,6 @@
 
     <include layout="@layout/toolbar"/>
 
-    <!--todo 25.03.2019 move in bottom -->
     <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
