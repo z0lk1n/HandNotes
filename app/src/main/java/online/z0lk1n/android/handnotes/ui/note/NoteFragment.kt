@@ -65,7 +65,6 @@ class NoteFragment : BaseFragment<NoteData>() {
                 showLoader()
                 model.loadNote(noteId)
             }
-
         }
 
         color_picker.onColorClickListener = {
@@ -100,6 +99,7 @@ class NoteFragment : BaseFragment<NoteData>() {
             (activity as MainActivity).run {
                 supportActionBar?.title = lastChanged.toStringFormat(DATE_FORMAT)
                 toolbar.setBackgroundColor(color.getColorResId(this))
+                color_picker.setBackgroundColor(color.getColorResId(this))
             }
 
             et_title.setText(title)
