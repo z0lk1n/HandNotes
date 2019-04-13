@@ -76,3 +76,4 @@ class MainActivity : AppCompatActivity() {
 
 //TODO 05.04.19 crash app when change orientation in auth screen
 //TODO 05.04.19 add registration anonymous in id phone
+//TODO 13.04.19 change app color
