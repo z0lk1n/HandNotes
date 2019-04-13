@@ -88,4 +88,3 @@ class MainActivity : AppCompatActivity() {
 //TODO 13.04.19 change panel view when open
 //TODO 13.04.19 change color icon when change toolbar color
 //TODO 13.04.19 rework logo
-//TODO 13.04.19 change buttons
