@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">@color/white</color>
+    <color name="colorAccent">@color/blue_A400</color>
+    <color name="colorBaseIcons">@color/gray_550</color>
 
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_550">#818181</color>
+    <color name="blue_A400">#2979FF</color>
 
-    <color name="main_red">#D00D1B</color>
-    <color name="main_black">#0A0A0A</color>
-    <color name="main_gray">#424038</color>
-    <color name="main_white">#EDE3C0</color>
-
-    <color name="white">#F5F5F5</color>
-    <color name="yellow">#FFF59D</color>
-    <color name="green">#81C784</color>
-    <color name="blue">#80D8FF</color>
-    <color name="red">#FF8A80</color>
-    <color name="violet">#E1BEE7</color>
-    <color name="pink">#F8BBD0</color>
+    <color name="white_note">@color/white</color>
+    <color name="yellow_note">#FFF59D</color>
+    <color name="green_note">#81C784</color>
+    <color name="blue_note">#80D8FF</color>
+    <color name="red_note">#FF8A80</color>
+    <color name="violet_note">#E1BEE7</color>
+    <color name="pink_note">#F8BBD0</color>
 </resources>

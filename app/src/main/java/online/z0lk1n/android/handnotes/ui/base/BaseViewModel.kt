@@ -32,4 +32,11 @@ open class BaseViewModel<S> : ViewModel(), CoroutineScope {
             errorChannel.send(e)
         }
     }
+
+    override fun onCleared() {
+        viewStateChannel.close()
+        errorChannel.close()
+        coroutineContext.cancel()
+        super.onCleared()
+    }
 }
