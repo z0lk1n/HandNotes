@@ -6,11 +6,16 @@
 
 This application was created for educational purposes, to work out a new stack of technologies.
 
-![](header.png)
+![](main_screen.png)
 
 ## Used technology stack
-* Clean architecture
+* Kotlin
 * MVVM
+* Firebase
+* Android Navigation Component
+* Coroutines
+* Koin
+* Timberkt
 
 ## License
 HandNotes is [Apache-2.0-licensed](LICENSE).
