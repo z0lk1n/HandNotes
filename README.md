@@ -6,8 +6,8 @@
 
 This application was created for educational purposes, to work out a new stack of technologies.
 
-![main_screen](main_screen.png){: width=50% }
-![note_screen](note_screen.png){: width=50% }
+![main_screen](main_screen.png)
+![note_screen](note_screen.png)
 
 ## Used technology stack
 * Kotlin
