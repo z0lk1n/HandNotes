@@ -7,6 +7,7 @@
 This application was created for educational purposes, to work out a new stack of technologies.
 
 ![](main_screen.png)
+![](note_screen.png)
 
 ## Used technology stack
 * Kotlin
