@@ -6,8 +6,8 @@
 
 This application was created for educational purposes, to work out a new stack of technologies.
 
-![main_screen](main_screen.png)
-![note_screen](note_screen.png)
+<img src="https://github.com/z0lk1n/HandNotes/blob/master/main_screen.png" width=30% height=30%>
+<img src="https://github.com/z0lk1n/HandNotes/blob/master/note_screen.png" width=30% height=30%>
 
 ## Used technology stack
 * Kotlin
